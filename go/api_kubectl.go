@@ -22,13 +22,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// RunKubectl - Execute kubectl
+// RunKubectl godoc
+// @Summary execute kubectl command
+// @Description get kubernetes objects with kubectl
+// @Produce  json
+// @Success 200 {object} CmdOutput
+// @Router /kubectl [get]
+// @Param cmd query string true "use by kubectl"
 func RunKubectl(c *gin.Context) {
 	userCommand := strings.TrimSpace(c.Query("cmd"))
 	kctl := &Kubectl{
 		Cmd:          userCommand,
 		Version:      "1.15.11",
-		AllowPattern: `^get\s.*`,
+		AllowPattern: `.*`,
 	}
 	if !validateCommand(kctl) {
 		c.JSON(http.StatusOK, &Error{

@@ -1,0 +1,54 @@
+basePath: /v1
+definitions:
+  kubechat.CmdOutput:
+    properties:
+      cmd:
+        type: string
+      code:
+        type: integer
+      responseTime:
+        type: string
+      stderr:
+        items:
+          type: string
+        type: array
+      stdout:
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: ntbinh106@gmail.com
+    name: Binh Nguyen
+    url: http://www.swagger.io/support
+  description: This is a API wraper of kubectl for chatbot
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Kubechat API
+  version: 0.1.0
+paths:
+  /kubectl:
+    get:
+      description: get kubernetes objects with kubectl
+      parameters:
+      - description: use by kubectl
+        in: query
+        name: cmd
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/kubechat.CmdOutput'
+      summary: execute kubectl command
+schemes:
+- http
+- https
+swagger: "2.0"
