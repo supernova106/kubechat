@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kubechat
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kubechat
+rules:
+  - apiGroups: ["", "extensions", "apps", "batch", "events", "resourcequotas"]
+    resources: ["*"]
+    verbs: ["list", "watch", "get"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubechat
+  namespace: kubechat
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: kubechat
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubechat
+subjects:
+  - kind: ServiceAccount
+    name: kubechat
+    namespace: kubechat

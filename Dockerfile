@@ -2,20 +2,30 @@ FROM golang:1.14 AS build
 WORKDIR /go/src
 COPY go ./go
 COPY main.go .
+COPY go.mod .
+COPY go.sum .
 
 ENV CGO_ENABLED=0
-RUN go get -d -v ./...
+ENV GO111MODULE=on
+RUN go get -v -t -d ./...
 
-RUN go build -a -installsuffix cgo -o kubechat .
+RUN go build -v -o kubechat .
 
-FROM scratch AS runtime
+######################
+# Build the app image
+######################
+FROM alpine:3.11.6 AS runtime
+
+RUN apk --no-cache add ca-certificates curl
+RUN addgroup --gid 1000 -S app && adduser -S --uid 1000 -g app app
 ENV GIN_MODE=release
-COPY --from=build /go/src/kubechat ./
+COPY --from=build /go/src/kubechat /bin/kubechat
 
 ENV KUBECTL_VERSION 1.15.11
-RUN cd /usr/local/bin && \
-    curl -Ls https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o kubectl && \
-    chmod +x kubectl
+RUN curl -Ls https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o /bin/kubectl && \
+    chmod +x /bin/kubectl
 
 EXPOSE 8080/tcp
-ENTRYPOINT ["./kubechat"]
+
+USER app
+CMD ["kubechat"]
