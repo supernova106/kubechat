@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  description: Wrapper API of kubectl CLI command
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Swagger Kubechat
+  version: 0.1.0
+servers:
+- description: default server
+  url: http://kubechat.swagger.io/v1
+- description: internal for development
+  url: http://localhost:8080
+paths:
+  /kubectl:
+    get:
+      operationId: runKubectl
+      parameters:
+      - description: cmd to run
+        explode: true
+        in: query
+        name: cmd
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kubectl'
+          description: return data from cmd
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: cmd is invalid
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: cmd is not allowed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Execute kubectl
+      tags:
+      - kubectl
+components:
+  schemas:
+    Kubectl:
+      example:
+        allowPattern: allowPattern
+        cmd: cmd
+        version: version
+      properties:
+        version:
+          type: string
+        allowPattern:
+          type: string
+        cmd:
+          pattern: ^get\s.*$
+          type: string
+      required:
+      - allowPattern
+      - cmd
+      - version
+      type: object
+    CmdOutput:
+      properties:
+        cmd:
+          type: string
+        code:
+          type: integer
+        stdout:
+          items:
+            type: string
+          type: array
+        stderr:
+          items:
+            type: string
+          type: array
+        responseTime:
+          format: string
+          type: string
+      required:
+      - cmd
+      - code
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message

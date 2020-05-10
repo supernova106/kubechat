@@ -1,0 +1,99 @@
+openapi: 3.0.0
+info:
+  description: Wrapper API of kubectl CLI command
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Swagger Kubechat
+  version: 0.1.0
+servers:
+- description: default server
+  url: http://kubechat.swagger.io/v1
+- description: internal for development
+  url: http://localhost:8080
+paths:
+  /kubectl:
+    get:
+      operationId: runKubectl
+      parameters:
+      - description: cmd to run
+        explode: true
+        in: query
+        name: cmd
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kubectl'
+          description: return data from cmd
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: cmd is invalid
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: cmd is not allowed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Execute kubectl
+      tags:
+      - kubectl
+components:
+  schemas:
+    Kubectl:
+      type: object
+      properties:
+        version:
+          type: string
+        allowPattern:
+          type: string
+        cmd:
+          type: string
+      required:
+      - version
+      - cmd
+      - allowPattern
+    CmdOutput:
+      required:
+      - code
+      - cmd
+      properties:
+        cmd:
+          type: string
+        code:
+          type: integer
+        stdout:
+          type: array
+          items:
+            type: string
+        stderr:
+          type: array
+          items:
+            type: string
+        responseTime:
+          type: string
+          format: string
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
