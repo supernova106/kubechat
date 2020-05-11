@@ -4,6 +4,7 @@ COPY go ./go
 COPY main.go .
 COPY go.mod .
 COPY go.sum .
+COPY docs ./docs
 
 ENV CGO_ENABLED=0
 ENV GO111MODULE=on

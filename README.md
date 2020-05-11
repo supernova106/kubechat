@@ -10,7 +10,8 @@ Deploy with helm
 
 ```sh
 helm repo add supernova106 https://supernova106.github.io/charts
-helm install supernova106/kubechat
+kubectl create ns kubechat
+helm install kubechat supernova106/kubechat --namespace kubechat
 ```
 
 Build from source code
@@ -24,6 +25,10 @@ go run main.go
 ```
 
 ## Usage
+
+Using swagger
+
+- [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
 Using curl
 
