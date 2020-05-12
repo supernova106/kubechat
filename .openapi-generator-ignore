@@ -24,4 +24,5 @@
 
 main.go 
 go/api_kubectl.go
+go/routers.go
 Dockerfile

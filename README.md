@@ -1,5 +1,5 @@
-![Publish Docker](https://github.com/supernova106/kubechat/workflows/Publish%20Docker/badge.svg?branch=v0.2.0)
-![goreleaser](https://github.com/supernova106/kubechat/workflows/goreleaser/badge.svg?branch=v0.2.0)
+![Publish Docker](https://github.com/supernova106/kubechat/workflows/Publish%20Docker/badge.svg)
+![goreleaser](https://github.com/supernova106/kubechat/workflows/goreleaser/badge.svg)
 
 # kubechat
 Kubernetes Chat Ops
